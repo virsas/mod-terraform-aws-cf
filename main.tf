@@ -18,7 +18,14 @@ resource "aws_cloudfront_distribution" "vss" {
     connection_attempts               = var.origin_connection_attempts
     connection_timeout                = var.origin_connection_timeout
 
-    custom_header                     = var.origin_custom_header // list(objects{name: string, value: string})
+    dynamic "custom_header" {
+      for_each = var.origin_custom_header
+
+      content {
+        name                          = custom_header.value.name
+        value                         = custom_header.value.value
+      }
+    }
 
     origin_access_control_id          = var.s3_config_enabled && !var.custom_config_enabled && var.oac != "" ? var.oac : null
 

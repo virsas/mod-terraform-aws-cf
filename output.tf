@@ -29,6 +29,12 @@ output "oai_id" {
 output "oai_etag" {
   value = try(aws_cloudfront_origin_access_identity.vss.etag, "")
 }
+output "oai_cloudfront_access_identity_path" {
+  value = try(aws_cloudfront_origin_access_identity.vss.cloudfront_access_identity_path, "")
+}
+output "oai_iam_arn" {
+  value = try(aws_cloudfront_origin_access_identity.vss.iam_arn, "")
+}
 output "oac_id" {
   value = try(aws_cloudfront_origin_access_control.vss.id, "")
 }

@@ -94,8 +94,15 @@ output "exampleRegionalDomain" {
 
 - id
 - arn
-- bucket_domain_name
-- bucket_regional_domain_name
-- region
-- s3_bucket_website_domain
-- s3_bucket_website_endpoint
+- caller_reference
+- status
+- domain_name
+- last_modified_time
+- etag
+- hosted_zone_id
+- oai_id
+- oai_etag
+- oai_cloudfront_access_identity_path
+- oai_iam_arn
+- oac_id
+- oac_etag

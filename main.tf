@@ -48,7 +48,7 @@ resource "aws_cloudfront_distribution" "vss" {
     }
 
     dynamic "s3_origin_config" {
-      for_each = var.s3_config_enabled && !var.custom_config_enabled && var.create_oai && var.oai == "" && var.oac == "" && !var.create_oac ? [{ oai = aws_cloudfront_origin_access_identity.vss.id }] : []
+      for_each = var.s3_config_enabled && !var.custom_config_enabled && var.create_oai && var.oai == "" && var.oac == "" && !var.create_oac ? [{ oai = aws_cloudfront_origin_access_identity.vss.oai_cloudfront_access_identity_path }] : []
 
       content {
         origin_access_identity        = s3_origin_config.value.oai

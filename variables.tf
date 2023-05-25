@@ -43,40 +43,10 @@ variable "oai" {
   type        = string
   default     = ""
 }
-variable "create_oai" {
-  description = "If you want to create a distribution with Origin Access Identity, but you dont have one and you would like one to be created. Enable this variable. Defaults to false."
-  type        = bool
-  default     = false
-}
 variable "oac" {
   description = "If you want to create a distribution with Origin Access Control you have already created. Configure this value with its ID"
   type        = string
   default     = ""
-}
-variable "create_oac" {
-  description = "If you want to create a distribution with Origin Access Control, but you dont have one and you would like one to be created. Enable this variable. Defaults to false."
-  type        = bool
-  default     = false
-}
-variable "oac_origin_type" {
-  description = "The type of origin that this Origin Access Control is for. Allowed values s3 and mediastore. Defaults to s3."
-  type        = string
-  default     = "s3"
-
-  validation {
-    condition           = contains(["s3", "mediastore"], var.oac_origin_type)
-    error_message       = "Expected values: s3, mediastore."
-  }
-}
-variable "oac_behaviour" {
-  description = "Specifies which requests CloudFront signs. Specify always for the most common use case. Allowed values: always, never, and no-override"
-  type        = string
-  default     = "always"
-
-  validation {
-    condition           = contains(["always", "never", "no-override"], var.oac_behaviour)
-    error_message       = "Expected values: always, never, no-override."
-  }
 }
 variable "enabled" {
   description = "You can change this variable to false if you want to disable distribution temporarily."
@@ -123,7 +93,7 @@ variable "origin_connection_timeout" {
 }
 variable "origin_custom_header" {
   description = "Add extra headers to traffic between CF and Endpoint. Eg. [{name: \"Referer\", value: \"ref-01\"}]"
-  type        = list(object{name = string, value = string})
+  type        = list(object({name = string, value = string}))
   default     = []
 }
 variable "custom_endpoint_http_port" {
@@ -153,7 +123,7 @@ variable "ipv6_enabled" {
 }
 variable "custom_errors" {
   description = "List of errors you would want to server customized page for. Eg.: [{error_code = 404, response_code = 200, response_page = \"/index.html\" }]"
-  type        = list(object{error_code = number, response_code = number, response_page = string})
+  type        = list(object({error_code = number, response_code = number, response_page = string}))
   default     = []
 }
 variable "allowed_methods" {
@@ -178,12 +148,12 @@ variable "protocol_policy" {
 }
 variable "function_associations" {
   description = "List of up to 2 cf functions. Eg.: [{event_type = \"viewer-request\", function_arn = \"function_arn\" }]. Allowed event types: viewer-request or viewer-response"
-  type        = list(object{event_type = string, function_arn = string})
+  type        = list(object({event_type = string, function_arn = string}))
   default     = []
 }
 variable "lambda_functions" {
   description = "List of up to 4 lambda functions. Eg.: [{event_type = \"viewer-request\", lambda_arn = \"lambda_arn\", include_body = false }]. Allowed event types: viewer-request, origin-request, viewer-response, origin-response"
-  type        = list(object{event_type = string, lambda_arn = string, include_body = bool})
+  type        = list(object({event_type = string, lambda_arn = string, include_body = bool}))
   default     = []
 }
 variable "http_version" {

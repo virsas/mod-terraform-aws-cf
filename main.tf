@@ -7,22 +7,6 @@ provider "aws" {
   }
 }
 
-resource "aws_cloudfront_origin_access_identity" "vss" {
-  count                               = var.create_oai && !var.create_oac && var.oai == "" && var.oac == "" ? 1 : 0
-
-  comment                             = var.name
-}
-
-resource "aws_cloudfront_origin_access_control" "vss" {
-  count = var.create_oac && !var.create_oai && var.oai == "" && var.oac == "" ? 1 : 0
-
-  name                                = var.name
-  description                         = "OAC for ${var.source_domain} cloudfront distribution."
-  origin_access_control_origin_type   = var.oac_origin_type
-  signing_behavior                    = var.oac_behaviour
-  signing_protocol                    = "sigv4"
-}
-
 resource "aws_cloudfront_distribution" "vss" {
   enabled                             = var.enabled
   comment                             = var.name
@@ -37,18 +21,9 @@ resource "aws_cloudfront_distribution" "vss" {
     custom_header                     = var.origin_custom_header // list(objects{name: string, value: string})
 
     origin_access_control_id          = var.s3_config_enabled && !var.custom_config_enabled && var.oac != "" ? var.oac : null
-    origin_access_control_id          = var.s3_config_enabled && !var.custom_config_enabled && var.create_oac && var.oac == "" ? aws_cloudfront_origin_access_control.vss.id : null
 
     dynamic "s3_origin_config" {
-      for_each = var.s3_config_enabled && !var.custom_config_enabled && var.oai != "" && var.oac == "" && !var.create_oac ? [{ oai = var.oai }] : []
-
-      content {
-        origin_access_identity        = s3_origin_config.value.oai
-      }
-    }
-
-    dynamic "s3_origin_config" {
-      for_each = var.s3_config_enabled && !var.custom_config_enabled && var.create_oai && var.oai == "" && var.oac == "" && !var.create_oac ? [{ oai = aws_cloudfront_origin_access_identity.vss.oai_cloudfront_access_identity_path }] : []
+      for_each = var.s3_config_enabled && !var.custom_config_enabled && var.oai != "" && var.oac == "" ? [{ oai = var.oai }] : []
 
       content {
         origin_access_identity        = s3_origin_config.value.oai

@@ -117,9 +117,9 @@ variable "custom_endpoint_ssl_protocols" {
   default     = ["TLSv1.2"]
 }
 variable "ipv6_enabled" {
-  description = "Enable/Disable IPv6 for Cloudfront distribution. Enabled by default."
+  description = "Enable/Disable IPv6 for Cloudfront distribution. Disabled by default."
   type        = bool
-  default     = true
+  default     = false
 }
 variable "custom_errors" {
   description = "List of errors you would want to server customized page for. Eg.: [{error_code = 404, response_code = 200, response_page = \"/index.html\" }]"
@@ -176,9 +176,9 @@ variable "ssl_acm_certificate_arn" {
   type        = string
 }
 variable "ssl_minimum_protocol_version" {
-  description = "Minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections. Defaults to TLSv1.2_2019"
+  description = "Minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections. Defaults to TLSv1.2_2021"
   type        = string
-  default     = "TLSv1.2_2019"
+  default     = "TLSv1.2_2021"
 }
 variable "default_ttl" {
   description = "Default amount of time (in seconds) that an object is in a CloudFront cache before CloudFront forwards another request. Defaults to 3600."

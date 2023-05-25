@@ -9,7 +9,6 @@ provider "aws" {
 
 resource "aws_cloudfront_distribution" "vss" {
   enabled                             = var.enabled
-  comment                             = var.name
 
   origin {
     domain_name                       = var.endpoint

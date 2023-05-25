@@ -33,11 +33,6 @@ variable "assumableRole" {
   default               = "OrganizationAccountAccessRole"
 }
 
-variable "name" {
-  description = "Instance name. Required value"
-  type        = string
-}
-
 variable "oai" {
   description = "If you want to create a distribution with Origin Access Identity you have already created. Configure this value with its ID"
   type        = string
@@ -181,9 +176,9 @@ variable "ssl_minimum_protocol_version" {
   default     = "TLSv1.2_2021"
 }
 variable "default_ttl" {
-  description = "Default amount of time (in seconds) that an object is in a CloudFront cache before CloudFront forwards another request. Defaults to 3600."
+  description = "Default amount of time (in seconds) that an object is in a CloudFront cache before CloudFront forwards another request. Defaults to 0."
   type        = number
-  default     = 3600
+  default     = 0
 }
 variable "min_ttl" {
   description = "Minimum amount of time (in seconds) that an object is in a CloudFront cache before CloudFront forwards another request. Defaults to 0."
@@ -191,7 +186,7 @@ variable "min_ttl" {
   default     = 0
 }
 variable "max_ttl" {
-  description = "Maximum amount of time (in seconds) that an object is in a CloudFront cache before CloudFront forwards another request. Defaults to 86400."
+  description = "Maximum amount of time (in seconds) that an object is in a CloudFront cache before CloudFront forwards another request. Defaults to 0."
   type        = number
-  default     = 86400
+  default     = 0
 }

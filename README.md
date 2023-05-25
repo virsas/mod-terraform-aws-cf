@@ -9,13 +9,8 @@ Terraform module to create CloudFront instance
 - **region** - The region for the resources. By default it is eu-west-1.
 - **assumeRole** - Enable / Disable role assume. This is disabled by default and normally used for sub organization configuration.
 - **assumableRole** - The role the user will assume if assumeRole is enabled. By default, it is OrganizationAccountAccessRole.
-- **name** - Instance name. Required value
 - **oai** - If you want to create a distribution with Origin Access Identity you have already created. Configure this value with its ID
-- **create_oai** - If you want to create a distribution with Origin Access Identity, but you dont have one and you would like one to be created. Enable this variable. Defaults to false.
 - **oac** - If you want to create a distribution with Origin Access Control you have already created. Configure this value with its ID
-- **create_oac** - If you want to create a distribution with Origin Access Control, but you dont have one and you would like one to be created. Enable this variable. Defaults to false.
-- **oac_origin_type** - The type of origin that this Origin Access Control is for. Allowed values s3 and mediastore. Defaults to s3.
-- **oac_behaviour** - Specifies which requests CloudFront signs. Specify always for the most common use case. Allowed values: always, never, and no-override
 - **enabled** - You can change this variable to false if you want to disable distribution temporarily.
 - **source_domain** - Main CNAME record this cloudfront distribution will be serving. Required value.
 - **source_domain_aliases** - List of alternative domains.
@@ -49,8 +44,6 @@ Terraform module to create CloudFront instance
 
 ## Example
 
-Each bucket requires bucket policy to be defined as JSON file in ./s3/name.json location. You can change the location with policy_path = ./policies
-
 ### Static website with header Referer
 
 ```terraform
@@ -63,7 +56,16 @@ module "s3_bucket_example" {
   accountID = var.accountID
   region = "eu-west-1"
 
-  name   = "example"
+  source_domain         = "example.com"
+  source_domain_aliases = ["www.example.com"]
+
+  endpoint              = module.s3_example_spa_app.bucket_regional_domain_name
+  default_root_object   = "index.html"
+  custom_errors         = [
+    { error_code = 404, response_code = 200, response_page = "/index.html" },
+    { error_code = 403, response_code = 200, response_page = "/index.html" }
+  ]
+  ssl_acm_certificate_arn = module.acm_example.arn
 }
 ```
 
@@ -79,14 +81,16 @@ module "s3_bucket_example" {
   accountID = var.accountID
   region = "eu-west-1"
 
-  name   = "example"
-}
+  source_domain         = "example.com"
+  source_domain_aliases = ["www.example.com"]
 
-output "exampleEndpoint" {
-  value = module.s3_bucket_example.website_endpoint
-}
-output "exampleRegionalDomain" {
-  value = module.s3_bucket_example.bucket_regional_domain_name
+  endpoint              = module.s3_example_spa_app.bucket_regional_domain_name
+  default_root_object   = "index.html"
+  custom_errors         = [
+    { error_code = 404, response_code = 200, response_page = "/index.html" },
+    { error_code = 403, response_code = 200, response_page = "/index.html" }
+  ]
+  ssl_acm_certificate_arn = module.acm_example.arn
 }
 ```
 
@@ -100,9 +104,3 @@ output "exampleRegionalDomain" {
 - last_modified_time
 - etag
 - hosted_zone_id
-- oai_id
-- oai_etag
-- oai_cloudfront_access_identity_path
-- oai_iam_arn
-- oac_id
-- oac_etag
